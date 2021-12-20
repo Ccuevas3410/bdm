@@ -55,7 +55,7 @@ def main(sc, spark):
     udfAddPrefix = F.udf(lambda x: "2020-"+x)
     dfJ = dfI.select("group","year",udfAddPrefix("date").alias("date"),"stats.*").sort("group","year","date").cache()
 
-    OUTPUT_PREFIX = '/content'
+    
     filenames = {0:"big_box_grocers",1:"convenience_stores",2:"drinking_places",3:"full_service_restaurants",
              4:"limited_service_restaurants",5:"pharmacies_and_drug_stores",6:"snack_and_bakeries",
              7:"specialty_food_stores",8:"supermarkets_except_convenience_stores"}
@@ -63,7 +63,7 @@ def main(sc, spark):
         dfJ.filter(f'group={i}') \
             .drop('group') \
             .coalesce(1) \
-            .write.csv(f'{OUTPUT_PREFIX}/{filenames[i]}',mode='overwrite', header=True)
+            .write.csv(f'/content/{filenames[i]}',mode='overwrite', header=True)
     
 if __name__=='__main__':
     sc = SparkContext()
